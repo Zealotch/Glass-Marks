@@ -8,8 +8,7 @@
     "downloads",
     "storage",
     "unlimitedStorage",
-    "bookmarks",
-    "favicon"
+    "bookmarks"
   ],
   "icons": {
     "16": "icon.png",
