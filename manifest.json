@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Glass Marks Dashboard",
+  "version": "1.0",
+  "description": "Custom bookmark hub.",
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "storage",
+    "unlimitedStorage",
+    "bookmarks"
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Open Glass Marks"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+M",
+        "mac": "Alt+M"
+      },
+      "description": "Open Glass Marks from anywhere"
+    }
+  }
+}

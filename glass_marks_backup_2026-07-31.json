@@ -1,0 +1,553 @@
+{
+  "bookmarks": [
+    {
+      "id": 1785486827417,
+      "name": "Steam",
+      "url": "https://store.steampowered.com/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785486796577,
+      "name": "Epic Games",
+      "url": "https://store.epicgames.com/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785490580057,
+      "name": "Lostgamer",
+      "url": "https://lostgamer.io/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785489256881,
+      "name": "Osu!",
+      "url": "https://osu.ppy.sh/beatmapsets",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785485477784,
+      "name": "Nexus Mods",
+      "url": "https://www.nexusmods.com",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785483627762,
+      "name": "Tendoku",
+      "url": "https://tendoku.com/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785483727160,
+      "name": "Inside Game",
+      "url": "https://in-sidegame.com/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785495692982,
+      "name": "GOG",
+      "url": "https://www.gog.com/en/",
+      "category": "Gaming",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785490573017,
+      "name": "MapGenie",
+      "url": "https://mapgenie.io/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785485793866,
+      "name": "CoolRoom PSX",
+      "url": "https://coolrom.com/roms/psx/",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785490381897,
+      "name": "Floor796",
+      "url": "https://floor796.com/#t5r1,145,201",
+      "category": "Gaming",
+      "categoryDesc": "Games"
+    },
+    {
+      "id": 1785488296594,
+      "name": "Ova Games",
+      "url": "https://www.ovagames.com/",
+      "category": "Pirate",
+      "categoryDesc": "Bajak Laut"
+    },
+    {
+      "id": 1785488305041,
+      "name": "STEAMRIP",
+      "url": "https://steamrip.com/",
+      "category": "Pirate",
+      "categoryDesc": "Bajak Laut"
+    },
+    {
+      "id": 1785488300753,
+      "name": "AnkerGames",
+      "url": "https://ankergames.net/",
+      "category": "Pirate",
+      "categoryDesc": "Bajak Laut"
+    },
+    {
+      "id": 1785488313945,
+      "name": "Kusonime",
+      "url": "https://kusonime.com/",
+      "category": "Pirate",
+      "categoryDesc": "Bajak Laut"
+    },
+    {
+      "id": 1785488254633,
+      "name": "Online-Fix",
+      "url": "https://online-fix.me/",
+      "category": "Pirate",
+      "categoryDesc": "Bajak Laut"
+    },
+    {
+      "id": 1785488317329,
+      "name": "Pirated Games Mega Thread",
+      "url": "https://rentry.org/pgames",
+      "category": "Pirate",
+      "categoryDesc": "Bajak Laut"
+    },
+    {
+      "id": 1785488886409,
+      "name": "PressPlayz",
+      "url": "https://pressplayz.to/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785489029041,
+      "name": "YarrList",
+      "url": "https://yarrlist.net/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785489261097,
+      "name": "YASIR252",
+      "url": "https://www.yasir252.com/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785494458805,
+      "name": "Otomi Games",
+      "url": "https://otomi-games.com/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785495505245,
+      "name": "F95zone",
+      "url": "https://f95zone.to/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785495548605,
+      "name": "FitGirl Repacks",
+      "url": "https://fitgirl-repacks.site/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785495574205,
+      "name": "CPG Repacks",
+      "url": "https://cpgrepacks.site/",
+      "category": "Pirate",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785493487161,
+      "name": "Kucing Peduli",
+      "url": "https://nekopoi.care/",
+      "category": "Cultured",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785494442341,
+      "name": "Aturan34",
+      "url": "https://rule34video.com/",
+      "category": "Cultured",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785494761093,
+      "name": "Iwara TV",
+      "url": "https://www.iwara.tv/",
+      "category": "Cultured",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785494771205,
+      "name": "Pawchive",
+      "url": "https://pawchive.pw/artists",
+      "category": "Cultured",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785487341118,
+      "name": "Shopee",
+      "url": "https://shopee.co.id/?is_from_login=true",
+      "category": "Apps",
+      "categoryDesc": "Mostly Web Version"
+    },
+    {
+      "id": 1785487374712,
+      "name": "DeepL",
+      "url": "https://www.deepl.com/en/translator",
+      "category": "Apps",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785487420121,
+      "name": "FotMob",
+      "url": "https://www.fotmob.com",
+      "category": "Apps",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785492791225,
+      "name": "Proton Mail",
+      "url": "https://mail.proton.me/u/1/inbox",
+      "category": "Apps",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785492808306,
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/",
+      "category": "Apps",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785492981498,
+      "name": "OpenCut",
+      "url": "https://opencut.app/projects",
+      "category": "Apps",
+      "categoryDesc": ""
+    },
+    {
+      "id": 1785490409137,
+      "name": "Wallpapers Clan",
+      "url": "https://wallpapers-clan.com/",
+      "category": "Utility",
+      "categoryDesc": "Random"
+    },
+    {
+      "id": 1785490687696,
+      "name": "Dungeon Scrawl",
+      "url": "https://app.dungeonscrawl.com/",
+      "category": "Utility",
+      "categoryDesc": "Random"
+    },
+    {
+      "id": 1785492586850,
+      "name": "Myinstants",
+      "url": "https://www.myinstants.com/en/index/us/",
+      "category": "Utility",
+      "categoryDesc": ""
+    },
+    {
+      "id": 3,
+      "name": "ChatGPT",
+      "url": "https://chatgpt.com",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 4,
+      "name": "Claude",
+      "url": "https://claude.ai",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490521010,
+      "name": "Emergent",
+      "url": "https://app.emergent.sh/home",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490870544,
+      "name": "MidJourney",
+      "url": "https://www.midjourney.com/explore?tab=video_top",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490737801,
+      "name": "ToolFK Online",
+      "url": "https://www.toolfk.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490797481,
+      "name": "Ryne AI",
+      "url": "https://ryne.ai/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490510505,
+      "name": "Dribbble",
+      "url": "https://dribbble.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490929848,
+      "name": "Wand",
+      "url": "https://wand.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785491753033,
+      "name": "MeiGen",
+      "url": "https://www.meigen.ai/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 5,
+      "name": "Perplexity",
+      "url": "https://perplexity.ai",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 2,
+      "name": "Lovable",
+      "url": "https://lovable.dev",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785487072146,
+      "name": "NoteBook",
+      "url": "https://notebook.google.com/",
+      "customIcon": "data:image/png;base64,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",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785488131521,
+      "name": "Cobalt",
+      "url": "https://cobalt.tools/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785488142417,
+      "name": "GPTZero",
+      "url": "https://app.gptzero.me/home",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489179297,
+      "name": "Anthiago",
+      "url": "https://anthiago.com/transcript/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489188873,
+      "name": "Gamma",
+      "url": "https://gamma.app/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489193801,
+      "name": "Upscale",
+      "url": "https://www.upscale.media/id/upload",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489199169,
+      "name": "AI Summarizer",
+      "url": "https://www.summarizer.org/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489238233,
+      "name": "CodeConvert AI",
+      "url": "https://www.codeconvert.ai/free-converter",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489347865,
+      "name": "Lucid",
+      "url": "https://lucid.co/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489391793,
+      "name": "MoeWalls",
+      "url": "https://moewalls.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489458665,
+      "name": "BLACKBOX AI",
+      "url": "https://www.blackbox.ai/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489474161,
+      "name": "Perchance AI",
+      "url": "https://perchance.org/ai-character-generator",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489542313,
+      "name": "Beautiful AI",
+      "url": "https://www.beautiful.ai/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489594872,
+      "name": "Polotno Studio",
+      "url": "https://polotno.com/studio",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785489625168,
+      "name": "Slidenest",
+      "url": "https://slidenest.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490209641,
+      "name": "Consensus",
+      "url": "https://consensus.app/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490271641,
+      "name": "KaryaTulis",
+      "url": "https://karyatulis.ai/app/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490290009,
+      "name": "iLoveIMG",
+      "url": "https://www.iloveimg.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490399513,
+      "name": "Napkin AI",
+      "url": "https://www.napkin.ai/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490414953,
+      "name": "Paperanimator",
+      "url": "https://app.paperanimator.com/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785490431473,
+      "name": "Uiverse",
+      "url": "https://uiverse.io/",
+      "category": "AI Tools",
+      "categoryDesc": "Artificial Intelligence"
+    },
+    {
+      "id": 1785491044305,
+      "name": "Mindrift",
+      "url": "https://mindrift.toloka.ai/",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 8,
+      "name": "GitHub",
+      "url": "https://github.com",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 1785488241313,
+      "name": "Codewars",
+      "url": "https://www.codewars.com/",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 1785489131010,
+      "name": "W3Schools ",
+      "url": "https://www.w3schools.com/",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 1785489277537,
+      "name": "LearnX",
+      "url": "https://www.learnx.org/",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 1785489336881,
+      "name": "LingoHut",
+      "url": "https://www.lingohut.com/id",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 1785490154169,
+      "name": "Stack Overflow",
+      "url": "https://stackoverflow.com/",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    },
+    {
+      "id": 1785490279458,
+      "name": "TLX",
+      "url": "https://tlx.toki.id/",
+      "category": "Learning",
+      "categoryDesc": "Study"
+    }
+  ],
+  "categoryOrder": [
+    "Gaming",
+    "Pirate",
+    "Cultured",
+    "Apps",
+    "Utility",
+    "AI Tools",
+    "Learning"
+  ]
+}
