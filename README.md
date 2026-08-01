@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="icon.png" width="150" alt="Glass Marks Icon">
+</p>
+
 # Glass Marks Dashboard 🌟
 
 A modern, ultra-fast, and beautiful Chrome Extension for managing your bookmarks with a futuristic glassmorphism aesthetic. 
