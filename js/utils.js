@@ -1,6 +1,12 @@
 
 export function getFavicon(url) {
     try {
+        if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+            const faviconUrl = new URL(chrome.runtime.getURL("/_favicon/"));
+            faviconUrl.searchParams.set("pageUrl", url);
+            faviconUrl.searchParams.set("size", "64");
+            return faviconUrl.toString();
+        }
         const domain = new URL(url).hostname;
         return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
     } catch (e) {
