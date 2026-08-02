@@ -1,5 +1,5 @@
 
-import { state, saveData, saveCategoryOrder } from './state.js';
+import { state, saveData, saveCategoryOrder, saveTheme, saveShortcuts } from './state.js';
 import { DOM } from './dom.js';
 import { render } from './ui.js';
 import { getFavicon } from './utils.js';
@@ -25,9 +25,8 @@ export function setupTheme() {
     DOM.themeCircles.forEach(circle => {
         circle.addEventListener('click', () => {
             const selectedTheme = circle.dataset.theme;
-            state.currentTheme = selectedTheme;
             applyTheme(selectedTheme);
-            localStorage.setItem('glass_marks_theme', selectedTheme);
+            saveTheme(selectedTheme);
         });
     });
 }
@@ -81,7 +80,7 @@ export function setupShortcuts() {
             };
             
             inputEl.value = displayStr;
-            localStorage.setItem('glass_marks_shortcuts', JSON.stringify(state.customShortcuts));
+            saveShortcuts(state.customShortcuts);
             inputEl.blur();
         });
     }
@@ -148,6 +147,25 @@ export function setupSettings() {
             DOM.importFile.click();
         });
         
+        function validateImportedBookmarks(rawList) {
+            if (!Array.isArray(rawList)) return null;
+            const valid = [];
+            for (const item of rawList) {
+                if (item && typeof item === 'object' && typeof item.url === 'string' && item.url.trim().length > 0) {
+                    valid.push({
+                        id: typeof item.id === 'number' ? item.id : Date.now() + Math.floor(Math.random() * 100000),
+                        name: typeof item.name === 'string' && item.name.trim() ? item.name.trim() : 'Untitled',
+                        url: item.url.trim(),
+                        category: typeof item.category === 'string' && item.category.trim() ? item.category.trim() : 'Uncategorized',
+                        categoryDesc: typeof item.categoryDesc === 'string' ? item.categoryDesc : '',
+                        customIcon: typeof item.customIcon === 'string' ? item.customIcon : null,
+                        clicks: typeof item.clicks === 'number' ? item.clicks : 0
+                    });
+                }
+            }
+            return valid.length > 0 ? valid : null;
+        }
+
         DOM.importFile.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -156,17 +174,26 @@ export function setupSettings() {
             reader.onload = (event) => {
                 try {
                     const importedData = JSON.parse(event.target.result);
+                    let importedBookmarks = null;
+                    let importedCategoryOrder = [];
+
                     if (Array.isArray(importedData)) {
-                        state.bookmarks = importedData;
-                        state.categoryOrder = [];
-                    } else if (importedData.bookmarks) {
-                        state.bookmarks = importedData.bookmarks;
-                        if (importedData.categoryOrder) {
-                            state.categoryOrder = importedData.categoryOrder;
+                        importedBookmarks = validateImportedBookmarks(importedData);
+                    } else if (importedData && typeof importedData === 'object') {
+                        if (importedData.bookmarks) {
+                            importedBookmarks = validateImportedBookmarks(importedData.bookmarks);
                         }
-                    } else {
-                        throw new Error("Invalid data format");
+                        if (Array.isArray(importedData.categoryOrder)) {
+                            importedCategoryOrder = importedData.categoryOrder.filter(c => typeof c === 'string');
+                        }
                     }
+                    
+                    if (!importedBookmarks) {
+                        throw new Error("No valid bookmarks found in file.");
+                    }
+
+                    state.bookmarks = importedBookmarks;
+                    state.categoryOrder = importedCategoryOrder;
                     
                     saveData();
                     saveCategoryOrder();

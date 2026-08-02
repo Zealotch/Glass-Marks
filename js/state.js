@@ -39,27 +39,51 @@ export function saveCategoryOrder() {
     }
 }
 
+export function saveTheme(theme) {
+    state.currentTheme = theme;
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.set({ 'glass_marks_theme': theme });
+    }
+    localStorage.setItem('glass_marks_theme', theme);
+}
+
+export function saveShortcuts(shortcuts) {
+    state.customShortcuts = shortcuts;
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.set({ 'glass_marks_shortcuts': shortcuts });
+    }
+    localStorage.setItem('glass_marks_shortcuts', JSON.stringify(shortcuts));
+}
+
 export function deleteBookmark(id) {
     state.bookmarks = state.bookmarks.filter(b => b.id !== id);
     saveData();
 }
 
 export function initData(callback) {
-    const savedShortcuts = localStorage.getItem('glass_marks_shortcuts');
-    if (savedShortcuts) {
-        state.customShortcuts = JSON.parse(savedShortcuts);
-    }
-    
-    state.currentTheme = localStorage.getItem('glass_marks_theme') || 'cyan';
-
     if (typeof chrome !== 'undefined' && chrome.storage) {
-        chrome.storage.local.get(['glass_marks_data', 'glass_marks_category_order'], (result) => {
+        chrome.storage.local.get(['glass_marks_data', 'glass_marks_category_order', 'glass_marks_theme', 'glass_marks_shortcuts'], (result) => {
+            if (result.glass_marks_theme) {
+                state.currentTheme = result.glass_marks_theme;
+            } else {
+                state.currentTheme = localStorage.getItem('glass_marks_theme') || 'cyan';
+            }
+
+            if (result.glass_marks_shortcuts) {
+                state.customShortcuts = result.glass_marks_shortcuts;
+            } else {
+                const savedShortcuts = localStorage.getItem('glass_marks_shortcuts');
+                if (savedShortcuts) {
+                    try { state.customShortcuts = JSON.parse(savedShortcuts); } catch(e) {}
+                }
+            }
+
             if (result.glass_marks_data && result.glass_marks_data.length > 0) {
                 state.bookmarks = result.glass_marks_data;
             } else {
                 const localBookmarks = localStorage.getItem('glass_marks_data');
                 if (localBookmarks) {
-                    state.bookmarks = JSON.parse(localBookmarks);
+                    try { state.bookmarks = JSON.parse(localBookmarks); } catch(e) { state.bookmarks = defaultBookmarks; }
                     saveData();
                 } else {
                     state.bookmarks = defaultBookmarks;
@@ -72,16 +96,20 @@ export function initData(callback) {
             } else {
                 const localOrder = localStorage.getItem('glass_marks_category_order');
                 if (localOrder) {
-                    state.categoryOrder = JSON.parse(localOrder);
+                    try { state.categoryOrder = JSON.parse(localOrder); } catch(e) { state.categoryOrder = []; }
                     saveCategoryOrder();
                 }
             }
             callback();
         });
     } else {
+        state.currentTheme = localStorage.getItem('glass_marks_theme') || 'cyan';
+        const savedShortcuts = localStorage.getItem('glass_marks_shortcuts');
+        if (savedShortcuts) {
+            try { state.customShortcuts = JSON.parse(savedShortcuts); } catch(e) {}
+        }
         const localBookmarks = localStorage.getItem('glass_marks_data');
         state.bookmarks = localBookmarks ? JSON.parse(localBookmarks) : defaultBookmarks;
-        
         const localOrder = localStorage.getItem('glass_marks_category_order');
         state.categoryOrder = localOrder ? JSON.parse(localOrder) : [];
         callback();
