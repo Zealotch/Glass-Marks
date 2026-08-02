@@ -1,8 +1,41 @@
 
-import { state, saveData, saveCategoryOrder, saveCategorySorts, deleteBookmark } from './state.js';
+import { state, saveData, saveCategoryOrder, saveCategorySorts, saveCategoryColors, saveCategoryEmojis, deleteBookmark } from './state.js';
 import { getFavicon, groupByCategory, escapeHTML } from './utils.js';
 import { getDragAfterElement, syncOrder, syncCategoryOrder, getDragAfterCollection } from './dragdrop.js';
 import { DOM } from './dom.js';
+
+const PRESET_PALETTE = ['#06b6d4', '#a855f7', '#10b981', '#f43f5e', '#f59e0b', '#3b82f6', '#ec4899', '#8b5cf6', '#14b8a6', '#f97316'];
+
+export function getCategoryColor(cat) {
+    if (state.categoryColors && state.categoryColors[cat]) {
+        return state.categoryColors[cat];
+    }
+    let hash = 0;
+    for (let i = 0; i < cat.length; i++) {
+        hash = cat.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % PRESET_PALETTE.length;
+    return PRESET_PALETTE[index];
+}
+
+export function getCategoryEmoji(cat) {
+    if (state.categoryEmojis && state.categoryEmojis[cat]) {
+        return state.categoryEmojis[cat];
+    }
+    const lower = cat.toLowerCase();
+    if (lower.includes('ai') || lower.includes('bot') || lower.includes('gpt')) return '🧠';
+    if (lower.includes('code') || lower.includes('dev') || lower.includes('program')) return '💻';
+    if (lower.includes('design') || lower.includes('art') || lower.includes('ui')) return '🎨';
+    if (lower.includes('social') || lower.includes('chat') || lower.includes('media')) return '💬';
+    if (lower.includes('game') || lower.includes('play')) return '🎮';
+    if (lower.includes('work') || lower.includes('job') || lower.includes('office')) return '💼';
+    if (lower.includes('shop') || lower.includes('buy') || lower.includes('store')) return '🛒';
+    if (lower.includes('news') || lower.includes('read') || lower.includes('doc')) return '📚';
+    if (lower.includes('music') || lower.includes('audio') || lower.includes('sound')) return '🎵';
+    if (lower.includes('video') || lower.includes('movie') || lower.includes('stream')) return '🎬';
+    if (lower.includes('tool') || lower.includes('util')) return '🛠️';
+    return '📁';
+}
 
 export function openEditModal(bm) {
     state.editingId = bm.id;
@@ -46,7 +79,9 @@ export function render(searchTerm = '') {
         categories.forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'nav-pill';
-            btn.textContent = cat;
+            const catColor = getCategoryColor(cat);
+            const catEmoji = getCategoryEmoji(cat);
+            btn.innerHTML = `<span class="nav-pill-dot" style="background-color: ${catColor};"></span>${escapeHTML(catEmoji)} ${escapeHTML(cat)}`;
             btn.addEventListener('click', () => {
                 const target = document.getElementById('cat-' + cat.replace(/\s+/g, '-'));
                 if (target) {
@@ -64,11 +99,15 @@ export function render(searchTerm = '') {
 
     categories.forEach(cat => {
         const data = grouped[cat];
+        const catColor = getCategoryColor(cat);
+        const catEmoji = getCategoryEmoji(cat);
         
         const colDiv = document.createElement('div');
         colDiv.className = 'collection';
         colDiv.id = 'cat-' + cat.replace(/\s+/g, '-');
         colDiv.dataset.categoryName = cat;
+        colDiv.style.setProperty('--cat-accent', catColor);
+        colDiv.style.setProperty('--cat-glow', catColor + '33');
         
         if (searchTerm === '') {
             colDiv.draggable = true;
@@ -90,7 +129,14 @@ export function render(searchTerm = '') {
         const descText = data.desc || '';
         header.innerHTML = `
             <div class="category-header-left">
-                <h2 class="category-title-editable" contenteditable="true">${escapeHTML(cat)}</h2>
+                <div class="category-title-row">
+                    <button class="category-emoji-btn" title="Ganti Emoji Kategori">${escapeHTML(catEmoji)}</button>
+                    <h2 class="category-title-editable" contenteditable="true">${escapeHTML(cat)}</h2>
+                    <div class="category-color-picker-wrapper" title="Ganti Warna Aksen Kategori">
+                        <input type="color" class="category-color-input" value="${catColor}">
+                        <span class="category-color-dot" style="background-color: ${catColor};"></span>
+                    </div>
+                </div>
                 <span class="category-desc-editable" contenteditable="true" data-placeholder="Add description...">${escapeHTML(descText)}</span>
             </div>
             <div class="category-header-right">
@@ -103,6 +149,31 @@ export function render(searchTerm = '') {
             </div>
         `;
         
+        const emojiBtn = header.querySelector('.category-emoji-btn');
+        emojiBtn.addEventListener('click', () => {
+            const newEmoji = prompt(`Ketik atau pilih Emoji untuk kategori "${cat}":`, catEmoji);
+            if (newEmoji !== null && newEmoji.trim() !== '') {
+                state.categoryEmojis[cat] = newEmoji.trim();
+                saveCategoryEmojis();
+                render(DOM.searchInput.value);
+            }
+        });
+
+        const colorInput = header.querySelector('.category-color-input');
+        const colorDot = header.querySelector('.category-color-dot');
+        colorInput.addEventListener('input', (e) => {
+            const newCol = e.target.value;
+            colorDot.style.backgroundColor = newCol;
+            colDiv.style.setProperty('--cat-accent', newCol);
+            colDiv.style.setProperty('--cat-glow', newCol + '33');
+        });
+        colorInput.addEventListener('change', (e) => {
+            const newCol = e.target.value;
+            state.categoryColors[cat] = newCol;
+            saveCategoryColors();
+            render(DOM.searchInput.value);
+        });
+
         const sortSelect = header.querySelector('.category-sort-select');
         sortSelect.addEventListener('change', (e) => {
             state.categorySorts[cat] = e.target.value;
@@ -127,6 +198,16 @@ export function render(searchTerm = '') {
                     state.categorySorts[newCat] = state.categorySorts[cat];
                     delete state.categorySorts[cat];
                     saveCategorySorts();
+                }
+                if (state.categoryColors[cat]) {
+                    state.categoryColors[newCat] = state.categoryColors[cat];
+                    delete state.categoryColors[cat];
+                    saveCategoryColors();
+                }
+                if (state.categoryEmojis[cat]) {
+                    state.categoryEmojis[newCat] = state.categoryEmojis[cat];
+                    delete state.categoryEmojis[cat];
+                    saveCategoryEmojis();
                 }
                 saveCategoryOrder();
                 saveData();

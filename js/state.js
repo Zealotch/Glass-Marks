@@ -3,6 +3,8 @@ export const state = {
     bookmarks: [],
     categoryOrder: [],
     categorySorts: {},
+    categoryColors: {},
+    categoryEmojis: {},
     customShortcuts: {
         search: { key: '/', altKey: false, ctrlKey: false, shiftKey: false, display: '/' },
         add: { key: 'n', altKey: true, ctrlKey: false, shiftKey: false, display: 'Alt+N' }
@@ -45,6 +47,22 @@ export function saveCategorySorts() {
         chrome.storage.local.set({ 'glass_marks_category_sorts': state.categorySorts });
     } else {
         localStorage.setItem('glass_marks_category_sorts', JSON.stringify(state.categorySorts));
+    }
+}
+
+export function saveCategoryColors() {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.set({ 'glass_marks_category_colors': state.categoryColors });
+    } else {
+        localStorage.setItem('glass_marks_category_colors', JSON.stringify(state.categoryColors));
+    }
+}
+
+export function saveCategoryEmojis() {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.set({ 'glass_marks_category_emojis': state.categoryEmojis });
+    } else {
+        localStorage.setItem('glass_marks_category_emojis', JSON.stringify(state.categoryEmojis));
     }
 }
 
@@ -117,6 +135,22 @@ export function initData(callback) {
                     try { state.categorySorts = JSON.parse(localSorts); } catch(e) { state.categorySorts = {}; }
                 }
             }
+            if (result.glass_marks_category_colors) {
+                state.categoryColors = result.glass_marks_category_colors;
+            } else {
+                const localColors = localStorage.getItem('glass_marks_category_colors');
+                if (localColors) {
+                    try { state.categoryColors = JSON.parse(localColors); } catch(e) { state.categoryColors = {}; }
+                }
+            }
+            if (result.glass_marks_category_emojis) {
+                state.categoryEmojis = result.glass_marks_category_emojis;
+            } else {
+                const localEmojis = localStorage.getItem('glass_marks_category_emojis');
+                if (localEmojis) {
+                    try { state.categoryEmojis = JSON.parse(localEmojis); } catch(e) { state.categoryEmojis = {}; }
+                }
+            }
             callback();
         });
     } else {
@@ -131,6 +165,10 @@ export function initData(callback) {
         state.categoryOrder = localOrder ? JSON.parse(localOrder) : [];
         const localSorts = localStorage.getItem('glass_marks_category_sorts');
         state.categorySorts = localSorts ? JSON.parse(localSorts) : {};
+        const localColors = localStorage.getItem('glass_marks_category_colors');
+        state.categoryColors = localColors ? JSON.parse(localColors) : {};
+        const localEmojis = localStorage.getItem('glass_marks_category_emojis');
+        state.categoryEmojis = localEmojis ? JSON.parse(localEmojis) : {};
         callback();
     }
 }
