@@ -271,10 +271,50 @@ body {
 .collection-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     margin-bottom: 20px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--card-border);
+    gap: 12px;
+}
+
+.category-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.category-header-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.category-sort-select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.category-sort-select:hover, .category-sort-select:focus {
+    border-color: var(--accent);
+    color: var(--text-main);
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+.category-sort-select option {
+    background: #0f172a;
+    color: var(--text-main);
 }
 
 .collection-header h2 {

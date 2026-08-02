@@ -2,6 +2,7 @@
 export const state = {
     bookmarks: [],
     categoryOrder: [],
+    categorySorts: {},
     customShortcuts: {
         search: { key: '/', altKey: false, ctrlKey: false, shiftKey: false, display: '/' },
         add: { key: 'n', altKey: true, ctrlKey: false, shiftKey: false, display: 'Alt+N' }
@@ -36,6 +37,14 @@ export function saveCategoryOrder() {
         chrome.storage.local.set({ 'glass_marks_category_order': state.categoryOrder });
     } else {
         localStorage.setItem('glass_marks_category_order', JSON.stringify(state.categoryOrder));
+    }
+}
+
+export function saveCategorySorts() {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.set({ 'glass_marks_category_sorts': state.categorySorts });
+    } else {
+        localStorage.setItem('glass_marks_category_sorts', JSON.stringify(state.categorySorts));
     }
 }
 
@@ -100,6 +109,14 @@ export function initData(callback) {
                     saveCategoryOrder();
                 }
             }
+            if (result.glass_marks_category_sorts) {
+                state.categorySorts = result.glass_marks_category_sorts;
+            } else {
+                const localSorts = localStorage.getItem('glass_marks_category_sorts');
+                if (localSorts) {
+                    try { state.categorySorts = JSON.parse(localSorts); } catch(e) { state.categorySorts = {}; }
+                }
+            }
             callback();
         });
     } else {
@@ -112,6 +129,8 @@ export function initData(callback) {
         state.bookmarks = localBookmarks ? JSON.parse(localBookmarks) : defaultBookmarks;
         const localOrder = localStorage.getItem('glass_marks_category_order');
         state.categoryOrder = localOrder ? JSON.parse(localOrder) : [];
+        const localSorts = localStorage.getItem('glass_marks_category_sorts');
+        state.categorySorts = localSorts ? JSON.parse(localSorts) : {};
         callback();
     }
 }

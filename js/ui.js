@@ -1,5 +1,5 @@
 
-import { state, saveData, saveCategoryOrder, deleteBookmark } from './state.js';
+import { state, saveData, saveCategoryOrder, saveCategorySorts, deleteBookmark } from './state.js';
 import { getFavicon, groupByCategory, escapeHTML } from './utils.js';
 import { getDragAfterElement, syncOrder, syncCategoryOrder, getDragAfterCollection } from './dragdrop.js';
 import { DOM } from './dom.js';
@@ -86,12 +86,30 @@ export function render(searchTerm = '') {
         const header = document.createElement('div');
         header.className = 'collection-header';
         
+        const sortMode = state.categorySorts[cat] || 'manual';
         const descText = data.desc || '';
         header.innerHTML = `
-            <h2 class="category-title-editable" contenteditable="true">${escapeHTML(cat)}</h2>
-            <span class="category-desc-editable" contenteditable="true" data-placeholder="Add description...">${escapeHTML(descText)}</span>
+            <div class="category-header-left">
+                <h2 class="category-title-editable" contenteditable="true">${escapeHTML(cat)}</h2>
+                <span class="category-desc-editable" contenteditable="true" data-placeholder="Add description...">${escapeHTML(descText)}</span>
+            </div>
+            <div class="category-header-right">
+                <select class="category-sort-select" title="Urutkan bookmark di kategori ini">
+                    <option value="manual" ${sortMode === 'manual' ? 'selected' : ''}>📌 Manual</option>
+                    <option value="name" ${sortMode === 'name' ? 'selected' : ''}>🔤 Nama (A-Z)</option>
+                    <option value="clicks" ${sortMode === 'clicks' ? 'selected' : ''}>🔥 Paling sering diklik</option>
+                    <option value="recent" ${sortMode === 'recent' ? 'selected' : ''}>⏱️ Baru ditambahkan</option>
+                </select>
+            </div>
         `;
         
+        const sortSelect = header.querySelector('.category-sort-select');
+        sortSelect.addEventListener('change', (e) => {
+            state.categorySorts[cat] = e.target.value;
+            saveCategorySorts();
+            render(DOM.searchInput.value);
+        });
+
         const titleH2 = header.querySelector('.category-title-editable');
         titleH2.addEventListener('blur', (e) => {
             const newCat = e.target.textContent.trim();
@@ -104,6 +122,11 @@ export function render(searchTerm = '') {
                 const index = state.categoryOrder.indexOf(cat);
                 if (index !== -1) {
                     state.categoryOrder[index] = newCat;
+                }
+                if (state.categorySorts[cat]) {
+                    state.categorySorts[newCat] = state.categorySorts[cat];
+                    delete state.categorySorts[cat];
+                    saveCategorySorts();
                 }
                 saveCategoryOrder();
                 saveData();
@@ -141,14 +164,23 @@ export function render(searchTerm = '') {
         const grid = document.createElement('div');
         grid.className = 'bookmarks-grid';
         
-        data.items.forEach(bm => {
+        let itemsToRender = [...data.items];
+        if (sortMode === 'name') {
+            itemsToRender.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+        } else if (sortMode === 'clicks') {
+            itemsToRender.sort((a, b) => (b.clicks || 0) - (a.clicks || 0));
+        } else if (sortMode === 'recent') {
+            itemsToRender.sort((a, b) => (b.id || 0) - (a.id || 0));
+        }
+
+        itemsToRender.forEach(bm => {
             const a = document.createElement('a');
             a.className = 'bookmark-card';
             a.href = bm.url;
             a.target = '_blank';
             a.dataset.id = bm.id;
             
-            if (searchTerm === '') {
+            if (searchTerm === '' && sortMode === 'manual') {
                 a.draggable = true;
                 a.addEventListener('dragstart', (e) => {
                     e.stopPropagation();
