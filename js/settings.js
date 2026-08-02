@@ -109,29 +109,40 @@ export function setupSettings() {
                     categoryOrder: state.categoryOrder
                 };
                 const jsonStr = JSON.stringify(dataToExport, null, 2);
-                
-                navigator.clipboard.writeText(jsonStr).then(() => {
-                    alert("BERHASIL! ✅\n\nKarena sistem unduhan Chrome memblokir file, seluruh data Bookmark Anda telah otomatis di-COPY (Salin) ke Clipboard Anda.\n\nLANGKAH SELANJUTNYA:\n1. Buka aplikasi Notepad di komputer Anda.\n2. Tekan Ctrl + V (Paste).\n3. Simpan file tersebut (Save As) dengan nama 'backup.json'.\n\nData Anda dijamin aman sekarang!");
-                }).catch(err => {
-                    console.error("Clipboard fail", err);
-                });
-                
                 const blob = new Blob([jsonStr], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
-                const downloadAnchorNode = document.createElement('a');
-                downloadAnchorNode.href = url;
                 const date = new Date();
                 const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                downloadAnchorNode.download = `glass_marks_backup_${dateString}.json`;
-                document.body.appendChild(downloadAnchorNode);
-                downloadAnchorNode.click();
-                downloadAnchorNode.remove();
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-                
+                const filename = `glass_marks_backup_${dateString}.json`;
+
+                if (typeof chrome !== 'undefined' && chrome.downloads && chrome.downloads.download) {
+                    chrome.downloads.download({
+                        url: url,
+                        filename: filename,
+                        saveAs: true
+                    }, (downloadId) => {
+                        if (chrome.runtime.lastError) {
+                            console.warn("Download API fallback:", chrome.runtime.lastError);
+                            fallbackDownload(url, filename);
+                        }
+                    });
+                } else {
+                    fallbackDownload(url, filename);
+                }
             } catch (err) {
                 alert("Error preparing export: " + err.message);
             }
         });
+
+        function fallbackDownload(url, filename) {
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.href = url;
+            downloadAnchorNode.download = filename;
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
         
         DOM.importBtnProxy.addEventListener('click', () => {
             DOM.importFile.click();
