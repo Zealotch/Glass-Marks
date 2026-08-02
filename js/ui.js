@@ -1,6 +1,6 @@
 
 import { state, saveData, saveCategoryOrder, deleteBookmark } from './state.js';
-import { getFavicon, groupByCategory } from './utils.js';
+import { getFavicon, groupByCategory, escapeHTML } from './utils.js';
 import { getDragAfterElement, syncOrder, syncCategoryOrder, getDragAfterCollection } from './dragdrop.js';
 import { DOM } from './dom.js';
 
@@ -88,8 +88,8 @@ export function render(searchTerm = '') {
         
         const descText = data.desc || '';
         header.innerHTML = `
-            <h2 class="category-title-editable" contenteditable="true">${cat}</h2>
-            <span class="category-desc-editable" contenteditable="true" data-placeholder="Add description...">${descText}</span>
+            <h2 class="category-title-editable" contenteditable="true">${escapeHTML(cat)}</h2>
+            <span class="category-desc-editable" contenteditable="true" data-placeholder="Add description...">${escapeHTML(descText)}</span>
         `;
         
         const titleH2 = header.querySelector('.category-title-editable');
@@ -165,7 +165,7 @@ export function render(searchTerm = '') {
             a.innerHTML = `
                 <img src="${iconUrl}" class="bookmark-icon" title="Click to upload custom icon" alt="icon">
                 <div class="bookmark-info">
-                    <div class="bookmark-name">${bm.name}</div>
+                    <div class="bookmark-name">${escapeHTML(bm.name)}</div>
                 </div>
                 <div class="action-btns">
                     <button class="icon-btn edit-btn" data-id="${bm.id}" title="Edit Bookmark">

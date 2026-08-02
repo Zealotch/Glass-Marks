@@ -3,7 +3,7 @@ import { state, initData, initTab, saveData } from './state.js';
 import { DOM } from './dom.js';
 import { render, setupCategoryDropdown } from './ui.js';
 import { setupSettings, setupTheme, setupShortcuts } from './settings.js';
-import { getFavicon } from './utils.js';
+import { getFavicon, escapeHTML } from './utils.js';
 import { getDragAfterCollection } from './dragdrop.js';
 
 // Search
@@ -96,7 +96,7 @@ if (DOM.statsBtn) {
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
                         <span class="leaderboard-rank ${rankClass}">${rank === 1 ? '🏆' : rank}</span>
                         <img src="${iconUrl}" style="width: 24px; height: 24px; border-radius: 6px; object-fit: contain;">
-                        <span style="color: var(--text-main); font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${bm.name}</span>
+                        <span style="color: var(--text-main); font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHTML(bm.name)}</span>
                     </div>
                     <span class="clicks-badge ${hotClass}">${icon} ${bm.clicks}</span>
                 `;
