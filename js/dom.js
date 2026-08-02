@@ -25,5 +25,15 @@ export const DOM = {
     categoryInput: document.getElementById('bm-category'),
     categoryDropdown: document.getElementById('category-dropdown'),
     quickNav: document.getElementById('quick-nav'),
-    modalTitle: document.getElementById('modal-title')
+    modalTitle: document.getElementById('modal-title'),
+    // Toast
+    toastContainer: document.getElementById('toast-container'),
+    toastMessage: document.getElementById('toast-message'),
+    toastUndoBtn: document.getElementById('toast-undo-btn'),
+    toastProgressBar: document.getElementById('toast-progress-bar'),
+    // Auto-backup snapshots
+    snapshotSection: document.getElementById('snapshot-section'),
+    snapshotSelect: document.getElementById('snapshot-select'),
+    restoreSnapshotBtn: document.getElementById('restore-snapshot-btn')
 };
+

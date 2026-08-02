@@ -90,8 +90,28 @@ export function setupShortcuts() {
 }
 
 export function setupSettings() {
+    let availableSnapshots = [];
+
+    function refreshSnapshotUI() {
+        if (!DOM.snapshotSection || !DOM.snapshotSelect) return;
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+            chrome.storage.local.get(['glass_marks_snapshots'], (res) => {
+                availableSnapshots = res.glass_marks_snapshots || [];
+                if (availableSnapshots.length > 0) {
+                    DOM.snapshotSection.style.display = 'block';
+                    DOM.snapshotSelect.innerHTML = availableSnapshots.map((s, idx) => 
+                        `<option value="${idx}">Auto-Backup: ${s.date} (${s.count} items)</option>`
+                    ).join('');
+                } else {
+                    DOM.snapshotSection.style.display = 'none';
+                }
+            });
+        }
+    }
+
     if (DOM.settingsBtn) {
         DOM.settingsBtn.addEventListener('click', () => {
+            refreshSnapshotUI();
             DOM.settingsModal.classList.remove('hidden');
         });
         DOM.closeSettingsBtn.addEventListener('click', () => {
@@ -100,6 +120,24 @@ export function setupSettings() {
         DOM.settingsModal.addEventListener('click', (e) => {
             if (e.target === DOM.settingsModal) DOM.settingsModal.classList.add('hidden');
         });
+
+        if (DOM.restoreSnapshotBtn) {
+            DOM.restoreSnapshotBtn.addEventListener('click', () => {
+                const selectedIdx = parseInt(DOM.snapshotSelect.value, 10);
+                const snapshot = availableSnapshots[selectedIdx];
+                if (!snapshot) return;
+
+                if (confirm(`Restore auto-backup from ${snapshot.date} (${snapshot.count} bookmarks)? Current data will be replaced.`)) {
+                    state.bookmarks = snapshot.bookmarks;
+                    state.categoryOrder = snapshot.categoryOrder || [];
+                    saveData();
+                    saveCategoryOrder();
+                    render(DOM.searchInput.value);
+                    alert("Auto-backup restored successfully! 🎉");
+                    DOM.settingsModal.classList.add('hidden');
+                }
+            });
+        }
         
         DOM.exportBtn.addEventListener('click', () => {
             try {

@@ -244,10 +244,22 @@ export function render(searchTerm = '') {
             delBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                if (confirm(`Are you sure you want to delete "${bm.name}"?`)) {
-                    deleteBookmark(bm.id);
+                
+                const deletedBm = bm;
+                const deletedIndex = state.bookmarks.findIndex(b => b.id === bm.id);
+                
+                deleteBookmark(bm.id);
+                render(DOM.searchInput.value);
+                
+                showToast(`"${bm.name}" deleted`, () => {
+                    if (deletedIndex >= 0 && deletedIndex <= state.bookmarks.length) {
+                        state.bookmarks.splice(deletedIndex, 0, deletedBm);
+                    } else {
+                        state.bookmarks.push(deletedBm);
+                    }
+                    saveData();
                     render(DOM.searchInput.value);
-                }
+                });
             });
 
             const editBtn = a.querySelector('.edit-btn');
@@ -258,6 +270,7 @@ export function render(searchTerm = '') {
             });
             
             grid.appendChild(a);
+
         });
         
         if (searchTerm === '') {
@@ -316,3 +329,46 @@ export function setupCategoryDropdown() {
         }
     });
 }
+
+let toastTimer = null;
+let toastProgressInterval = null;
+
+export function showToast(message, onUndo) {
+    if (!DOM.toastContainer) return;
+    
+    if (toastTimer) clearTimeout(toastTimer);
+    if (toastProgressInterval) clearInterval(toastProgressInterval);
+    
+    DOM.toastMessage.textContent = message;
+    DOM.toastContainer.classList.remove('hidden');
+    DOM.toastProgressBar.style.width = '100%';
+    
+    let currentUndo = onUndo;
+    DOM.toastUndoBtn.onclick = () => {
+        if (currentUndo) {
+            currentUndo();
+            currentUndo = null;
+        }
+        DOM.toastContainer.classList.add('hidden');
+        if (toastTimer) clearTimeout(toastTimer);
+        if (toastProgressInterval) clearInterval(toastProgressInterval);
+    };
+    
+    const DURATION = 5000;
+    const startTime = Date.now();
+    
+    toastProgressInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remainingPct = Math.max(0, 100 - (elapsed / DURATION) * 100);
+        DOM.toastProgressBar.style.width = `${remainingPct}%`;
+        if (remainingPct <= 0) {
+            clearInterval(toastProgressInterval);
+        }
+    }, 50);
+    
+    toastTimer = setTimeout(() => {
+        DOM.toastContainer.classList.add('hidden');
+        if (toastProgressInterval) clearInterval(toastProgressInterval);
+    }, DURATION);
+}
+

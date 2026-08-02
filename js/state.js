@@ -116,6 +116,33 @@ export function initData(callback) {
     }
 }
 
+export function checkAndCreateAutoBackup() {
+    if (typeof chrome === 'undefined' || !chrome.storage) return;
+    
+    chrome.storage.local.get(['glass_marks_last_snapshot', 'glass_marks_snapshots'], (res) => {
+        const lastSnapshot = res.glass_marks_last_snapshot || 0;
+        const now = Date.now();
+        const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+        
+        if (state.bookmarks.length > 0 && (now - lastSnapshot > THREE_DAYS_MS || !res.glass_marks_snapshots || res.glass_marks_snapshots.length === 0)) {
+            const currentSnapshots = res.glass_marks_snapshots || [];
+            const newSnapshot = {
+                timestamp: now,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                count: state.bookmarks.length,
+                bookmarks: state.bookmarks,
+                categoryOrder: state.categoryOrder
+            };
+            
+            const updatedSnapshots = [newSnapshot, ...currentSnapshots].slice(0, 5);
+            chrome.storage.local.set({
+                'glass_marks_last_snapshot': now,
+                'glass_marks_snapshots': updatedSnapshots
+            });
+        }
+    });
+}
+
 export function initTab(callback) {
     if (typeof chrome !== 'undefined' && chrome.tabs) {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -128,3 +155,4 @@ export function initTab(callback) {
         callback();
     }
 }
+

@@ -1,5 +1,5 @@
 
-import { state, initData, initTab, saveData } from './state.js';
+import { state, initData, initTab, saveData, checkAndCreateAutoBackup } from './state.js';
 import { DOM } from './dom.js';
 import { render, setupCategoryDropdown } from './ui.js';
 import { setupSettings, setupTheme, setupShortcuts } from './settings.js';
@@ -165,6 +165,14 @@ DOM.form.addEventListener('submit', (e) => {
             bm.categoryDesc = descVal;
         }
     } else {
+        const cleanUrl = url.toLowerCase().trim().replace(/\/+$/, "");
+        const existing = state.bookmarks.find(b => b.url.toLowerCase().trim().replace(/\/+$/, "") === cleanUrl);
+        if (existing) {
+            if (!confirm(`Warning: A bookmark with this URL already exists ("${existing.name}"). Do you still want to save it anyway?`)) {
+                return;
+            }
+        }
+        
         const newBm = {
             id: Date.now(),
             name: nameVal,
@@ -266,4 +274,5 @@ initData(() => {
     setupSettings();
     setupCategoryDropdown();
     render(DOM.searchInput.value);
+    checkAndCreateAutoBackup();
 });
