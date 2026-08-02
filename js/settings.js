@@ -180,55 +180,61 @@ export function setupSettings() {
                 alert("Fitur ini hanya bekerja jika Anda menginstallnya sebagai ekstensi Chrome.");
                 return;
             }
-            if (confirm("Langkah ini akan menimpa/menghapus folder 'Glass Marks' lama di Bookmarks Manager Chrome Anda dan menggantinya dengan versi terbaru ini. Lanjutkan?")) {
+            if (confirm("Sinkronkan bookmark ke Bookmarks Manager Chrome (Folder 'Glass Marks')?")) {
                 DOM.syncNativeBtn.innerHTML = "Syncing...";
                 DOM.syncNativeBtn.disabled = true;
                 
                 const FOLDER_NAME = 'Glass Marks';
                 
-                chrome.bookmarks.search({ title: FOLDER_NAME }, (results) => {
-                    const existingFolders = results.filter(r => !r.url);
-                    
-                    const startSync = (parentId) => {
-                        let total = state.bookmarks.length;
-                        let processed = 0;
-                        if (total === 0) {
-                            DOM.syncNativeBtn.innerHTML = "Push to Chrome Bookmarks";
-                            DOM.syncNativeBtn.disabled = false;
-                            alert("Done!");
-                            return;
-                        }
-                        state.bookmarks.forEach(bm => {
-                            chrome.bookmarks.create({
-                                parentId: parentId,
-                                title: bm.name,
-                                url: bm.url
-                            }, () => {
-                                processed++;
-                                if (processed === total) {
-                                    setTimeout(() => { DOM.syncNativeBtn.innerHTML = "Push to Chrome Bookmarks"; DOM.syncNativeBtn.disabled = false; }, 2000);
-                                    alert("Successfully pushed all bookmarks to Chrome's native Bookmarks Manager under the 'Glass Marks' folder!");
-                                }
-                            });
+                const populateBookmarks = (folderId) => {
+                    let total = state.bookmarks.length;
+                    let processed = 0;
+                    if (total === 0) {
+                        DOM.syncNativeBtn.innerHTML = "Push to Chrome Bookmarks";
+                        DOM.syncNativeBtn.disabled = false;
+                        alert("Done! Tidak ada bookmark yang perlu disinkronkan.");
+                        return;
+                    }
+                    state.bookmarks.forEach(bm => {
+                        chrome.bookmarks.create({
+                            parentId: folderId,
+                            title: bm.name,
+                            url: bm.url
+                        }, () => {
+                            processed++;
+                            if (processed === total) {
+                                setTimeout(() => { 
+                                    DOM.syncNativeBtn.innerHTML = "Push to Chrome Bookmarks"; 
+                                    DOM.syncNativeBtn.disabled = false; 
+                                }, 1500);
+                                alert("Berhasil menyinkronkan seluruh bookmark ke folder 'Glass Marks' di Chrome!");
+                            }
                         });
-                    };
-                    
-                    if (existingFolders.length > 0) {
-                        let removedCount = 0;
-                        existingFolders.forEach(folder => {
-                            chrome.bookmarks.removeTree(folder.id, () => {
-                                removedCount++;
-                                if (removedCount === existingFolders.length) {
-                                    chrome.bookmarks.create({ title: FOLDER_NAME }, (newRoot) => {
-                                        startSync(newRoot.id);
-                                    });
-                                }
-                            });
+                    });
+                };
+
+                const createFreshFolderAndSync = () => {
+                    chrome.bookmarks.create({ title: FOLDER_NAME }, (newFolder) => {
+                        chrome.storage.local.set({ glass_marks_native_folder_id: newFolder.id }, () => {
+                            populateBookmarks(newFolder.id);
+                        });
+                    });
+                };
+
+                chrome.storage.local.get(['glass_marks_native_folder_id'], (res) => {
+                    const savedFolderId = res.glass_marks_native_folder_id;
+                    if (savedFolderId) {
+                        chrome.bookmarks.get(savedFolderId, (nodes) => {
+                            if (chrome.runtime.lastError || !nodes || nodes.length === 0) {
+                                createFreshFolderAndSync();
+                            } else {
+                                chrome.bookmarks.removeTree(savedFolderId, () => {
+                                    createFreshFolderAndSync();
+                                });
+                            }
                         });
                     } else {
-                        chrome.bookmarks.create({ title: FOLDER_NAME }, (newRoot) => {
-                            startSync(newRoot.id);
-                        });
+                        createFreshFolderAndSync();
                     }
                 });
             }
