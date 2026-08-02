@@ -250,6 +250,86 @@ export function setupSettings() {
         });
     }
 
+    if (DOM.importNativeBtn) {
+        DOM.importNativeBtn.addEventListener('click', () => {
+            if (typeof chrome === 'undefined' || !chrome.bookmarks) {
+                alert("Fitur ini hanya bekerja jika Anda menginstallnya sebagai ekstensi Chrome.");
+                return;
+            }
+
+            function extractBookmarks(nodes, currentFolder = "Chrome Bookmarks") {
+                let results = [];
+                for (const node of nodes) {
+                    if (node.url) {
+                        if (node.url.startsWith('http://') || node.url.startsWith('https://')) {
+                            results.push({
+                                id: Date.now() + Math.floor(Math.random() * 10000000),
+                                name: node.title || 'Untitled',
+                                url: node.url,
+                                category: currentFolder,
+                                categoryDesc: 'Imported from Chrome',
+                                clicks: 0
+                            });
+                        }
+                    }
+                    if (node.children && node.children.length > 0) {
+                        let folderName = node.title;
+                        if (!folderName || folderName === "Bookmarks bar" || folderName === "Bookmarks" || folderName === "Other bookmarks" || folderName === "Mobile bookmarks") {
+                            folderName = currentFolder;
+                        }
+                        results = results.concat(extractBookmarks(node.children, folderName));
+                    }
+                }
+                return results;
+            }
+
+            chrome.bookmarks.getTree((tree) => {
+                if (chrome.runtime.lastError || !tree) {
+                    alert("Gagal membaca bookmark dari Chrome.");
+                    return;
+                }
+
+                const imported = extractBookmarks(tree);
+                if (imported.length === 0) {
+                    alert("Tidak ada bookmark web (http/https) yang ditemukan di Chrome Anda.");
+                    return;
+                }
+
+                const existingUrls = new Set(state.bookmarks.map(b => b.url.toLowerCase().trim().replace(/\/+$/, "")));
+                const newItems = [];
+
+                for (const item of imported) {
+                    const cleanUrl = item.url.toLowerCase().trim().replace(/\/+$/, "");
+                    if (!existingUrls.has(cleanUrl)) {
+                        existingUrls.add(cleanUrl);
+                        newItems.push(item);
+                    }
+                }
+
+                if (newItems.length === 0) {
+                    alert("Semua bookmark Chrome Anda sudah ada di Glass Marks (tidak ada bookmark baru).");
+                    return;
+                }
+
+                if (confirm(`Ditemukan ${newItems.length} bookmark dari Chrome. Impor ke Glass Marks sekarang?`)) {
+                    state.bookmarks = [...state.bookmarks, ...newItems];
+
+                    newItems.forEach(item => {
+                        if (!state.categoryOrder.includes(item.category)) {
+                            state.categoryOrder.push(item.category);
+                        }
+                    });
+
+                    saveData();
+                    saveCategoryOrder();
+                    render(DOM.searchInput.value);
+                    alert(`Berhasil mengimpor ${newItems.length} bookmark dari Chrome! 🎉`);
+                    DOM.settingsModal.classList.add('hidden');
+                }
+            });
+        });
+    }
+
     if (DOM.syncNativeBtn) {
         DOM.syncNativeBtn.addEventListener('click', () => {
             if (typeof chrome === 'undefined' || !chrome.bookmarks) {
@@ -266,7 +346,7 @@ export function setupSettings() {
                     let total = state.bookmarks.length;
                     let processed = 0;
                     if (total === 0) {
-                        DOM.syncNativeBtn.innerHTML = "Push to Chrome Bookmarks";
+                        DOM.syncNativeBtn.innerHTML = "Push to Chrome";
                         DOM.syncNativeBtn.disabled = false;
                         alert("Done! Tidak ada bookmark yang perlu disinkronkan.");
                         return;
@@ -280,7 +360,7 @@ export function setupSettings() {
                             processed++;
                             if (processed === total) {
                                 setTimeout(() => { 
-                                    DOM.syncNativeBtn.innerHTML = "Push to Chrome Bookmarks"; 
+                                    DOM.syncNativeBtn.innerHTML = "Push to Chrome"; 
                                     DOM.syncNativeBtn.disabled = false; 
                                 }, 1500);
                                 alert("Berhasil menyinkronkan seluruh bookmark ke folder 'Glass Marks' di Chrome!");
@@ -317,3 +397,4 @@ export function setupSettings() {
         });
     }
 }
+

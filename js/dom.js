@@ -18,6 +18,7 @@ export const DOM = {
     exportBtn: document.getElementById('export-btn'),
     importBtnProxy: document.getElementById('import-btn-proxy'),
     importFile: document.getElementById('import-file'),
+    importNativeBtn: document.getElementById('import-native-btn'),
     syncNativeBtn: document.getElementById('sync-native-btn'),
     themeCircles: document.querySelectorAll('.theme-circle'),
     shortcutSearchInput: document.getElementById('shortcut-search'),
