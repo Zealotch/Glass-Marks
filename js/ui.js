@@ -301,6 +301,80 @@ export function render(searchTerm = '') {
                 openEditModal(bm);
             });
             
+            a.tabIndex = 0;
+
+            a.addEventListener('keydown', (e) => {
+                if (
+                    (DOM.modal && !DOM.modal.classList.contains('hidden')) ||
+                    (DOM.statsModal && !DOM.statsModal.classList.contains('hidden')) ||
+                    (DOM.settingsModal && !DOM.settingsModal.classList.contains('hidden'))
+                ) {
+                    return;
+                }
+
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    bm.clicks = (bm.clicks || 0) + 1;
+                    saveData();
+                    if (typeof chrome !== 'undefined' && chrome.tabs) {
+                        chrome.tabs.create({ url: bm.url });
+                    } else {
+                        window.open(bm.url, '_blank');
+                    }
+                    return;
+                }
+
+                const delBtn = a.querySelector('.delete-btn');
+                const editBtn = a.querySelector('.edit-btn');
+
+                if (e.key === 'Delete' || e.key === 'Backspace') {
+                    e.preventDefault();
+                    const allCards = Array.from(document.querySelectorAll('.bookmark-card'));
+                    const currentIndex = allCards.indexOf(a);
+                    const targetToFocus = allCards[currentIndex + 1] || allCards[currentIndex - 1] || DOM.searchInput;
+                    
+                    if (delBtn) delBtn.click();
+                    if (targetToFocus && typeof targetToFocus.focus === 'function') {
+                        setTimeout(() => targetToFocus.focus(), 60);
+                    }
+                    return;
+                }
+
+                if (e.key.toLowerCase() === 'e' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                    e.preventDefault();
+                    if (editBtn) editBtn.click();
+                    return;
+                }
+
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'j') {
+                    e.preventDefault();
+                    const allCards = Array.from(document.querySelectorAll('.bookmark-card'));
+                    const currentIndex = allCards.indexOf(a);
+                    if (currentIndex !== -1 && currentIndex < allCards.length - 1) {
+                        allCards[currentIndex + 1].focus();
+                    }
+                    return;
+                }
+
+                if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'k') {
+                    e.preventDefault();
+                    const allCards = Array.from(document.querySelectorAll('.bookmark-card'));
+                    const currentIndex = allCards.indexOf(a);
+                    if (currentIndex > 0) {
+                        allCards[currentIndex - 1].focus();
+                    } else {
+                        DOM.searchInput.focus();
+                    }
+                    return;
+                }
+
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    DOM.searchInput.focus();
+                    return;
+                }
+            });
+
             grid.appendChild(a);
 
         });

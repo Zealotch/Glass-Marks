@@ -12,6 +12,14 @@ DOM.searchInput.addEventListener('input', (e) => {
 });
 
 DOM.searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+        const firstCard = DOM.collectionsContainer.querySelector('.bookmark-card');
+        if (firstCard) {
+            e.preventDefault();
+            firstCard.focus();
+            return;
+        }
+    }
     if (e.key === 'Enter') {
         const firstCard = DOM.collectionsContainer.querySelector('.bookmark-card');
         if (firstCard) {
@@ -258,6 +266,18 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         DOM.addBtn.click();
         return;
+    }
+
+    if ((e.key === 'ArrowDown' || e.key === 'j') && !e.altKey && !e.ctrlKey && !e.metaKey) {
+        const active = document.activeElement;
+        if (!active || !active.classList.contains('bookmark-card')) {
+            const firstCard = DOM.collectionsContainer.querySelector('.bookmark-card');
+            if (firstCard) {
+                e.preventDefault();
+                firstCard.focus();
+                return;
+            }
+        }
     }
 });
 

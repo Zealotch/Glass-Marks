@@ -407,6 +407,16 @@ body {
     transform: translateX(5px);
 }
 
+.bookmark-card:focus,
+.bookmark-card:focus-visible,
+.bookmark-card.keyboard-focused {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 16px var(--glow-color), 0 0 0 2px var(--accent);
+    transform: translateX(6px) scale(1.01);
+    background-color: var(--card-hover);
+}
+
 .bookmark-icon {
     width: 32px;
     height: 32px;
